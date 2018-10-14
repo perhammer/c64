@@ -1,17 +1,22 @@
 0 rem !to "out/snek.prg"
 10 gosub 10000
 20 down=40:up=(-1)*down:right=1:left=(-1)*right:rem directions
+23 hunger=0
+24 df=25
 25 rem 'hp'=head position, 'd'=direction, 'td'=tail direction
 26 rem 'rg'=remaining growth, 'tp'=tail position
 30 hp=500:tp=hp:d=left:dim td(1000):rg=4:sc=0
 35 gosub 40000: gosub 50000
 40 poke 1024+hp, 230 :rem draw head
+45 if hp=tp and rg<1 then goto 55020
 50 gosub 60000:gosub 60000
 70 get k$ : if k$<>"" then gosub 20000
 80 td(hp)=d
 90 hp=hp+d : rem new head position
-95 if peek(1024+hp)=42 then rg=rg+1: sc=sc+1: gosub 40000: gosub 50000
+93 hunger=hunger+1
+95 if peek(1024+hp)=42 then rg=rg+1: sc=sc+1: hunger=0: df=df-1: gosub 40000: gosub 50000
 100 if rg=0 then gosub 30000
+103 if hunger>df then gosub 30000: hunger=0
 105 if rg>0 then rg=rg-1
 110 if peek(1024+hp)=32 or peek (1024+hp)=42 goto 40
 
